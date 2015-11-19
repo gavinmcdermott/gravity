@@ -1,0 +1,2 @@
+- why choose Redis instead of mongo (tailable cursor - skip schema for this)
+- why no socket (no live view yet)
