@@ -1,6 +1,9 @@
-// Environment config
+// An exposable environment config object
+var config = {};
+
+// Environment configuration values
 var ENV = {
-  REDISURL: 'redis://localhost:6379',
+  REDIS_URL: 'redis://localhost:6379',
   PORT: 3000
 };
 
@@ -36,13 +39,11 @@ function getEnv(variable) {
 };
 
 // Set up the environment
-setEnv('REDISURL', ENV.REDISURL);
+setEnv('REDIS_URL', ENV.REDIS_URL);
 setEnv('PORT', ENV.PORT);
 
-// Set up an exposable config object
-var config = {
-  PORT: getEnv('PORT'),
-  REDISURL: getEnv('REDISURL')
-};
+// Set up our (little) exposable config object
+config.PORT = getEnv('PORT');
+config.REDIS_URL = getEnv('REDIS_URL');
  
 module.exports = config;
