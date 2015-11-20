@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "redis-server & node server/app.js",
-    "test": "./node_modules/.bin/mocha server/tests"
+    "test": "redis-server & ./node_modules/.bin/mocha server/tests"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,8 @@
     "mocha": "2.3.4",
     "node-uuid": "1.4.7",
     "promise-redis": "0.0.4",
-    "redis": "2.3.1"
+    "q": "1.4.1",
+    "redis": "2.3.1",
+    "superagent": "1.4.0"
   }
 }

@@ -3,7 +3,6 @@ var auditAPI    = require('./audit');
 var config      = require('./config');
 var express     = require('express');
 var path        = require('path');
-var promise     = require('bluebird');
 var redisClient = require('./redis');
 var dataBuilder = require('./tasks/buildData');
 
@@ -35,10 +34,8 @@ app.listen(PORT, function () {
   console.log('Listening at addr:', hostData);
 
   // Build demo data
-  dataBuilder.build();
-  console.log('adsf');
-  auditAPI.getEvents({},{});
-  console.log('adsfasdadd');
+  // dataBuilder.build();
+  // auditAPI.getEvents({},{});
 });
 
 
@@ -53,5 +50,5 @@ app.listen(PORT, function () {
 // wipe data setup during tests
 process.on('exit', function() {
   console.log('exiting');
-  redisClient.flushall();
+  // redisClient.flushall();
 });

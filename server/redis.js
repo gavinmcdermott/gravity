@@ -1,5 +1,5 @@
 // Dependencies
-var redis       = require('promise-redis')();
+var redis       = require('redis');
 var config      = require('./config');
 
 // Constants

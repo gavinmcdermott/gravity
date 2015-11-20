@@ -1,5 +1,6 @@
 // Dependencies
-var redisClient    = require('./redis').client;
+var redisClient = require('./redis').client;
+var q           = require('q');
 
 /**
  * Get all events from the log
@@ -11,17 +12,16 @@ var redisClient    = require('./redis').client;
 module.exports.getEvents = function(req, res) {
   var limit = (req.params && req.params.limit && req.params.limit <= 100) ? req.params.limit : 100;
   var start = (req.params && req.params.start) || 0;
-  return redisClient.lrange('logEvents', start, limit)
-    .then(function(data) {
-      console.log("foo: ", data);
-      redisClient.flushall();
-      return res.json(data);
-    })
-    .catch(function(error) {
-      // log error
-      console.log('ERR');
-      return res.json(error);
+  
+  return q.Promise(function(resolve, reject) {
+    redisClient.lrange('logEvents', start, limit, function(err, data) {
+      if (err) {
+        // TODO: Better error handling
+        reject(res.json({ error: err }));
+      }
+      resolve(res.json(data));
     });
+  });
 };
 
 /**
