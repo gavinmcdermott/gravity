@@ -1,10 +1,11 @@
 // Pull in dependencies
+var auditAPI    = require('./audit');
 var config      = require('./config');
 var express     = require('express');
 var path        = require('path');
 var promise     = require('bluebird');
-// var redis       = require('redis');
 var redis       = require('promise-redis')();
+var dataBuilder = require('./tasks/buildData');
 
 // Constants
 var PORT        = config.PORT;
@@ -23,29 +24,20 @@ redisClient.on('error', function(err) {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Set up relevant paths for responses
 var staticPath  = path.resolve(__dirname, '../client');
 var indexPath   = path.resolve(__dirname, '../client/index.html');
 
+
 // Public API
-app.get('/api/v1/events', function (req, res) {
-  // res.sendFile(indexPath);
-});
+app.get('/api/v1/events', auditAPI.getEvents);
+app.put('/api/v1/events/:eventId', auditAPI.updateEvent);
+
+
 
 // Serve static files
 app.use(express.static(staticPath));
+
 
 // App navigation
 app.get('/', function (req, res) {
@@ -58,9 +50,6 @@ app.listen(PORT, function () {
   var port = this.address().port;
   console.log('Listening at http://%s:%s', host, port);
 
-
-  redisClient.set('mykey', 'myvalue')
-    .then(console.log)
-    .catch(console.log);
-
+  // Build sample data for the app
+  dataBuilder.build(redisClient);
 });
