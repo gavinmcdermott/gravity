@@ -1,13 +1,17 @@
+// Dependencies
 var redis       = require('promise-redis')();
 var config      = require('./config');
 
+// Constants
 var REDIS_URL   = config.REDIS_URL;
 
+// Init instances
 var redisClient = redis.createClient(REDIS_URL);
 
-// Redis error handler
+// Redis error handling
 redisClient.on('error', function(err) {
-  console.error("+++++++++++", err);
+  console.error("There was an error: ", err);
 });
 
+// Exposed API
 module.exports.client = redisClient;

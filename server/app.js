@@ -36,7 +36,9 @@ app.listen(PORT, function () {
 
   // Build demo data
   dataBuilder.build();
+  console.log('adsf');
   auditAPI.getEvents({},{});
+  console.log('adsfasdadd');
 });
 
 
@@ -50,5 +52,6 @@ app.listen(PORT, function () {
 
 // wipe data setup during tests
 process.on('exit', function() {
+  console.log('exiting');
   redisClient.flushall();
 });
