@@ -1,14 +1,39 @@
-// App Dependencies
-var config    = require('./config');
-var express   = require('express');
-var path      = require('path');
+// Pull in dependencies
+var config      = require('./config');
+var express     = require('express');
+var path        = require('path');
+var promise     = require('bluebird');
+// var redis       = require('redis');
+var redis       = require('promise-redis')();
 
 // Constants
 var PORT        = config.PORT;
 var REDIS_URL   = config.REDIS_URL;
 
-// Init the app
-var app = express();
+// Initialize needed objects
+var app         = express();
+var redisClient = redis.createClient(REDIS_URL);
+
+
+
+
+// Redis error handler
+redisClient.on('error', function(err) {
+  console.error("+++++++++++", err);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Set up relevant paths for responses
 var staticPath  = path.resolve(__dirname, '../client');
@@ -32,4 +57,10 @@ app.listen(PORT, function () {
   var host = this.address().address;
   var port = this.address().port;
   console.log('Listening at http://%s:%s', host, port);
+
+
+  redisClient.set('mykey', 'myvalue')
+    .then(console.log)
+    .catch(console.log);
+
 });
