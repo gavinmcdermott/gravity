@@ -1,9 +1,9 @@
 # Audit Log
 
 Before attempting to set up and run the app you'll need the following:
-  - Redis - [download](http://redis.io/) 
-  - Node.js [download](https://nodejs.org/en/); recommended install with [Homebrew](http://brew.sh/) 
-  - NPM [download](https://www.npmjs.com/)
+  - Redis: [download](http://redis.io/) 
+  - Node.js: [download](https://nodejs.org/en/); recommended install with [Homebrew](http://brew.sh/) 
+  - NPM: [download](https://www.npmjs.com/)
 
 ### Version
 0.0.1
@@ -30,7 +30,7 @@ $ npm start
 ```
 
 
-### Todos
+### Etc.
 
 - why Redis instead of mongo (tailable cursor, merges, etc.)
 - why no socket (no live view yet)
