@@ -1,5 +1,6 @@
 // Dependencies
 var auditAPI    = require('./audit');
+var bodyParser  = require('body-parser');
 var config      = require('./config');
 var express     = require('express');
 var path        = require('path');
@@ -12,13 +13,16 @@ var PORT        = config.PORT;
 // Initialize needed objects
 var app         = express();
 
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
+
 // Set up relevant paths for responses
 var staticPath  = path.resolve(__dirname, '../client');
 var indexPath   = path.resolve(__dirname, '../client/index.html');
 
 // Public API
 app.get('/api/v1/events', auditAPI.getEvents);
-app.put('/api/v1/events/:eventId/audit', auditAPI.updateAuditEvent);
+app.put('/api/v1/events/audit', auditAPI.updateAuditEvents);
 
 // Static files
 app.use(express.static(staticPath));
@@ -38,6 +42,9 @@ app.listen(PORT, function () {
   // auditAPI.getEvents({},{});
 });
 
+
+
+module.exports.app = app;
 
 
 

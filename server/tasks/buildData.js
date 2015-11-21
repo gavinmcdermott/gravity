@@ -56,7 +56,8 @@ module.exports.build = function() {
   var iter = 0;
   while (iter < 5) {
     var logItem = getRand(0, 1) === 0 ? getAuthLogItem() : getSessionLogItem(); 
-    redis.client.rpush(['logEvents', JSON.stringify(logItem)]);
+    redis.client.sadd('logEvents', 'logEvents:' + logItem.id);
+    redis.client.hmset('logEvents:' + logItem.id, 'data', JSON.stringify(logItem));
     iter++;
   }
 };
