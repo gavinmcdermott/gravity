@@ -1,7 +1,10 @@
 // Dependencies
 var _           = require('lodash');
 var redisClient = require('./redis').client;
-var q           = require('q');
+// TODO: Promisify this whole thing
+
+// Constants
+var FETCH_PREFIX = "logEvents";
 
 /**
  * Get all events from the log
@@ -11,27 +14,38 @@ var q           = require('q');
  * @return {json} json blob
  */
 module.exports.getEvents = function(req, res) {
-  var limit = (req.query && req.query.limit && req.query.limit <= 100) ? req.query.limit : 100;
+  var limit = (req.query && req.query.limit && req.query.limit <= 99) ? req.query.limit : 99;
   var start = (req.query && req.query.start) || 0;
-  // TODO: type sanity
+  // TODO: better type sanity checking
   var suspiciousOnly = (req.query && req.query.suspicious) || false;
 
-  return q.Promise(function(resolve, reject) {
-    redisClient.smembers('logEvents', function(err, data) {
+  redisClient.lrange(FETCH_PREFIX, start, limit, function(err, fetchIds) {
+    if (err) {
+      // TODO: Better error handling
+      return res.json({ error: err });
+    }
+    // Prepare a multistep async redis getter
+    var allResults = [];
+    var multi = redisClient.multi();
+    _.forEach(fetchIds, function(fetchId) {
+      multi.hgetall(fetchId, function(err, data) {
+        var item = JSON.parse(data.data);
+        if (suspiciousOnly) {
+          if (item.audit.suspicious) {
+            allResults.push(item);
+          }
+        } else {
+          allResults.push(item);
+        } 
+      });
+    });
+    // Execute the fetches
+    multi.exec(function(err) {
       if (err) {
-        // TODO: Better error handling
-        reject(res.json({ error: err }));
+
+        res.json({ error: err });
       }
-      var result;
-      if (suspiciousOnly) {
-        result = _.filter(data, function(d) {
-          var logItem = JSON.parse(d);
-          return logItem.audit.suspicious === true;
-        });
-      } else {
-        result = data;
-      }
-      resolve(res.json({ data: result }));
+      res.json({ data: allResults });
     });
   });
 };
@@ -45,30 +59,32 @@ module.exports.getEvents = function(req, res) {
  */
 module.exports.updateAuditEvents = function(req, res) {
   var updates = req.body.updates;
-  // naive way to check for num updates
   var updateCounter = 0
-  // naive error
-  var updateErr;
   
-  return q.Promise(function(resolve, reject) {
-    _.forEach(updates, function(logItem) {
-      redisClient.hgetall(logItem.id, function(err, data) {
-        // There is a lot we can do better here for error handling and data / 
-        // param sanitization for safety :)
-        var parsed = JSON.parse(data.event);
-        parsed.audit.suspicious = logItem.suspicious;
-        parsed.audit.comment = logItem.comment;
-        redisClient.hmset(parsed.id, "event", JSON.stringify(parsed), function(err) {
-          if (err) {
-            reject(res.json({ error: err }));
-          } else {
-            updateCounter++;
-            if (updateCounter == updates.length) {
-              resolve(res.json({ success: true, updated: updateCounter }) );
-            }
-          }
-        });
+  // Prepare a multistep async redis getter
+  var multi = redisClient.multi();
+  _.forEach(updates, function(logItem) {
+    multi.hgetall(FETCH_PREFIX + ":" + logItem.id, function(err, data) {
+      // There is a lot we can do better here for error handling and data / 
+      // param sanitization for safety :)
+      var newLogItem = data && JSON.parse(data.data);
+      if (!newLogItem) {
+        return;
+      }
+      newLogItem.audit.suspicious = logItem.suspicious;
+      newLogItem.audit.comment = logItem.comment;
+      
+      redisClient.hmset(FETCH_PREFIX + ":" + newLogItem.id, "data", JSON.stringify(newLogItem), function(err, data) {
+        updateCounter++;
       });
     });
+  });
+
+  // Execute the fetches
+  multi.exec(function(err, data) {
+    if (err) {
+      res.json({ error: err });
+    }
+    res.json({ success: true, updated: data.length });
   });
 };

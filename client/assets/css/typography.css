@@ -1,0 +1,103 @@
+h1 {
+  font-size: 52px;
+  letter-spacing: 1.4px;
+  padding-bottom: 10px;
+}
+
+h2 {
+  font-size: 40px;
+}
+
+h3 {
+  font-size: 28px;
+  letter-spacing: 1.12px;
+  padding-bottom: 12px;
+}
+
+h4 {
+  font-size: 20px;
+  padding-bottom: 8px;
+}
+
+h5 {
+  font-size: 12px;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+}
+
+p {
+  font-weight: 300;
+  max-width: 625px;
+  line-height: 1.33em;
+  padding-bottom: 18px;
+}
+
+a {
+  color: #1d91c0;
+  text-decoration: none;
+  /*border-bottom: 1px dashed #1d91c0;*/
+  padding-bottom: 2px;
+}
+a:hover {
+  opacity: .75;
+}
+
+a.unstyled {
+  color: #B0B0BB;
+  text-decoration: none;
+  border: none;
+}
+a.unstyled:hover {
+  opacity: .75;
+}
+
+blockquote {
+  font-style: italic;
+  line-height: 1.44em;
+  padding-left: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  max-width: 625px;
+  border-left: 3px solid;
+  border-color: #C4C4C8;
+  font-weight: 300;
+}
+
+code {
+  font-size: 15px;
+  font-family: 'Inconsolata';
+}
+
+
+.f--light {
+  color: #909090;
+}
+
+.f--warn {
+  color: ;
+}
+
+.f--dim {
+  opacity: .7;
+}
+
+.f--subtext {
+  font-size: 14px;
+  /*font-weight: 400;*/
+}
+
+.f--small {
+  font-size: 12px;
+  line-height: 1.5em;
+}
+
+.f--super {
+  font-size: 11px;
+  vertical-align: text-top;
+}
+
+.f--icon {
+  vertical-align: baseline;
+}

@@ -13,6 +13,7 @@
   "node": "4.2.1",
   "dependencies": {
     "body-parser": "1.14.1",
+    "cors": "2.7.1",
     "express": "4.13.3",
     "fakeredis": "0.3.4",
     "lodash": "3.10.1",

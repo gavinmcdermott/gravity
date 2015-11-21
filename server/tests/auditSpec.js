@@ -1,22 +1,29 @@
 var app           = require('../app');
 var audit         = require('../audit');
 var redisClient   = require('../redis').client;
+var mock          = require('../tasks/buildData');
 
 var assert        = require('assert');
 var request       = require('supertest')(app.app);
 
 describe('Audit Log Test', function(){
-
+  var fetchPrefix = "logEvents";
   // Fake data in redis
-  var eventA = JSON.stringify({id: 'logEvents:1', key:1, audit: { suspicious: true } });
-  var eventB = JSON.stringify({id: 'logEvents:2', key:2, audit: { suspicious: false } });
+  var eventA = mock.getAuthLogItem();
+  // force one to be suspicious
+  eventA.audit.suspicious = true;
+  
+  var eventB = mock.getSessionLogItem();
+  eventB.audit.suspicious = false;
  
   beforeEach(function(){
     redisClient.flushdb();
-    redisClient.sadd('logEvents', eventA);
-    redisClient.sadd('logEvents', eventB);
-    redisClient.hmset('logEvents:1', "event", eventA);
-    redisClient.hmset('logEvents:2', "event", eventB);
+
+    redisClient.hmset(fetchPrefix+ ':' + eventA.id, "data", JSON.stringify(eventA));
+    redisClient.lpush(fetchPrefix, fetchPrefix + ':' + eventA.id);
+    
+    redisClient.hmset(fetchPrefix+ ':' + eventB.id, "data", JSON.stringify(eventB));
+    redisClient.lpush(fetchPrefix, fetchPrefix + ':' + eventB.id);
   });
  
   afterEach(function(){
@@ -31,9 +38,9 @@ describe('Audit Log Test', function(){
       }
       assert.equal(2, res.body.data.length);
       // Set up a test object to work with
-      // newest member added is at the beginning
-      var testObj = JSON.parse(res.body.data[0]);
-      assert.equal(testObj.key, 2);
+      // newest list member added is at the beginning
+      var testObj = res.body.data[0];
+      assert.equal(testObj.id, eventB.id);
       done();
     });
   });
@@ -45,26 +52,25 @@ describe('Audit Log Test', function(){
         throw new Error(err);
       }
       assert.equal(1, res.body.data.length);
-      var testObj = JSON.parse(res.body.data[0]);
-      assert.equal(testObj.key, 1);
+      var testObj = res.body.data[0];
+      assert.equal(testObj.id, eventA.id);
       done();
     });
   });
 
   it('Updates a single log event', function(done) {
-    var evtId = 'logEvents:2';
     var testComment = 'some comment :)';
     request.put('/api/v1/events/audit')
     .set('Content-Type',  'application/json')
-    .send({ updates: [{ id: evtId, suspicious: false, comment: testComment }] })
+    .send({ updates: [{ id: eventA.id, suspicious: false, comment: testComment }] })
     .expect(200)
     .end(function(err, res) {
       if (err) {
         throw new Error(err);
       }
       assert.equal(res.body.updated, 1);
-      redisClient.hgetall(evtId, function(err, data) {
-        var logItem = JSON.parse(data.event);
+      redisClient.hgetall(fetchPrefix+ ':' + eventA.id, function(err, data) {
+        var logItem = JSON.parse(data.data);
         assert.equal(logItem.audit.suspicious, false);
         assert.equal(logItem.audit.comment, testComment);
         done();
@@ -73,14 +79,12 @@ describe('Audit Log Test', function(){
   });
 
   it('Updates multiple log events', function(done) {
-    var evtIdA = 'logEvents:1';
-    var evtIdB = 'logEvents:2';
     var testComment = 'another comment :)';
     request.put('/api/v1/events/audit')
     .set('Content-Type',  'application/json')
     .send({ updates: [
-        { id: evtIdA, suspicious: false, comment: testComment },
-        { id: evtIdB, suspicious: true, comment: testComment }
+        { id: eventA.id, suspicious: false, comment: testComment },
+        { id: eventB.id, suspicious: true, comment: testComment }
       ] 
     })
     .expect(200)
@@ -89,8 +93,8 @@ describe('Audit Log Test', function(){
         throw new Error(err);
       }
       assert.equal(res.body.updated, 2);
-      redisClient.hgetall(evtIdB, function(err, data) {
-        var logItem = JSON.parse(data.event);
+      redisClient.hgetall(fetchPrefix+ ':' + eventB.id, function(err, data) {
+        var logItem = JSON.parse(data.data);
         assert.equal(logItem.audit.suspicious, true);
         assert.equal(logItem.audit.comment, testComment);
         done();

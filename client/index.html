@@ -3,16 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Transport: Log</title>
+    <title>Gravitational | Log</title>
 
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/base.css">
-
+    <link rel="stylesheet" href="assets/css/forms.css">
+    <link rel="stylesheet" href="assets/css/grid.css">
+    <link rel="stylesheet" href="assets/css/typography.css">
+    <link rel="stylesheet" href="assets/css/tiles.css">
+    <link rel="stylesheet" href="assets/css/utils.css">
   </head>
-  <body class="pad--max">
-    <h1>Yo! <span class="fa fa-gear"></span></h1>
+  <body class="pad--max page-wrap" ng-app="Gravitational">
+
+    <ui-view></ui-view>
 
     <!-- Load scripts -->
+    <script type="text/javascript" src="scripts/vendor/moment.js"></script>
+    <script type="text/javascript" src="scripts/vendor/lodash.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/angular-1.4.8.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/angular-ui-router.min.js"></script>
+    <script type="text/javascript" src="scripts/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="modules/audit/scripts/auditModule.js"></script>
     <script type="text/javascript" src="scripts/app.js"></script>
   </body>
 </html>

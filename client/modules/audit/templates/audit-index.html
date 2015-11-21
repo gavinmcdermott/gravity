@@ -1,0 +1,102 @@
+<div class="lastUnit size1of1">
+
+  <div class="lastUnit size1of1 bordered--bottom below--24">
+    <div class="below--24">
+      <a href=""><span class="fa fa-arrow-left"></span> Back</a>
+    </div>
+
+    <h1>Audit Log</h1>
+    <h3>Boston Core Cluster</h3>
+    <p class="below--18">Recent activity through {{ latestDate }} </p>
+  </div>
+
+  <div class="lastUnit size1of1 below--18 bordered--bottom">
+    <button class="button right--12" ng-hide="editAll" ng-click="toggleEditAll()"><a href="">Edit All</a></button>
+    <button class="button right--12" ng-show="editAll" ng-click="toggleEditAll()"><a href="">Cancel Edit All</a></button>
+    <button class="button right--12 primary" ng-show="editAll" ng-click="updateAll()"><a href="">Save All Edits</a></button>
+    
+    <button class="button right--12" ng-hide="editAll || filtered" ng-click="filterAuditBy('suspicious')"><a href="">Filter by Suspicious</a></button>
+    <button class="button right--12" ng-show="!editAll && filtered" ng-click="refreshLog()"><a href="">Cancel Filters</a></button>
+    <button class="button filter" ng-show="filtered"><span class="pad--r6 fa fa-filter"></span>Filtering by Suspicious</button>
+  </div>
+
+  <div class="lastGroup size1of1" ng-repeat="item in log">
+
+    <div class="logTile below--18">
+      <code>
+        
+        <div class="lineItem lastGroup size1of1">
+          <div class="unit size2of8">
+            <label class="checkbox absolute float--left">
+              <input ng-attr-id="{{ 'input-' + $index }}" type="checkbox" class="checkbox__option-input" ng-click="toggleEdit($index, $event)" />
+            </label>
+
+            <strong class="pad--l48">Event ID: </strong>
+          </div>
+          
+          <div class="lastUnit size6of8">
+            {{ item.id }}
+          </div>
+        </div>
+
+        <div class="lineItem lastGroup size1of1">
+          <div class="unit size2of8">
+            <strong class="pad--l48">Type: </strong>
+          </div>
+          <div class="lastUnit size6of8">
+            {{ item.type }} 
+          </div>
+        </div>
+
+        <div class="lineItem lastGroup size1of1">
+          <div class="unit size2of8">
+            <strong class="pad--l48">Timestamp: </strong>
+          </div>
+          <div class="lastUnit size6of8">
+            {{ item.time }}
+          </div>
+        </div>
+
+        <div class="lineItem lastGroup size1of1">
+          <div class="unit size2of8">
+            <strong class="pad--l48">Audit: </strong>
+          </div>
+          <div class="lastUnit size6of8">
+            <span ng-class="{ 'warn' : item.audit.suspicious === true }">{{ item.audit }}</span>
+          </div>
+        </div>
+        
+        <div class="lineItem lastGroup size1of1">
+          <div class="unit size2of8">
+            <strong class="pad--l48">Event: </strong>
+          </div>
+          <div class="lastUnit size6of8">
+            {{ item.event }} 
+          </div>
+        </div>
+
+        <div class="lineItem lastUnit size1of1 above--18" ng-show="item.editing">
+          <div class="field-wrap">
+            <span class="pad--l48"><input type="text" ng-model="item.audit.comment" placeholder="Update this log item's commment"></span>
+          </div>
+
+          <div class="field-wrap">
+            <div class="pad--l48">
+              <label class="checkbox">
+                <input type="checkbox" ng-model="item.audit.suspicious" class="checkbox__option-input" />
+                <span>This log event is marked as suspicious</span>
+              </label>
+            </div>
+          </div>
+
+          <span class="pad--l48">
+            <button class="button primary" ng-hide="editAll" ng-click="updateEvent($index)"><a href="">Update Event</a></button>
+          </span>
+        </div>
+
+      </code>
+    </div>
+  </div>
+
+
+</div>

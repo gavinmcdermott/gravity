@@ -19,7 +19,7 @@ function generateAuditData() {
   };
 }
 
-function getSessionLogItem() {
+module.exports.getSessionLogItem = function() {
   return {
     type: 'session.log',
     id: generateId(),
@@ -36,7 +36,7 @@ function getSessionLogItem() {
   }
 }
 
-function getAuthLogItem() {
+module.exports.getAuthLogItem = function() {
   return {
     type: 'auth.attmept',
     id: generateId(),
@@ -54,10 +54,11 @@ function getAuthLogItem() {
 
 module.exports.build = function() {
   var iter = 0;
-  while (iter < 5) {
-    var logItem = getRand(0, 1) === 0 ? getAuthLogItem() : getSessionLogItem(); 
-    redis.client.sadd('logEvents', 'logEvents:' + logItem.id);
-    redis.client.hmset('logEvents:' + logItem.id, 'data', JSON.stringify(logItem));
+  while (iter < 30) {
+    var logItem = getRand(0, 1) === 0 ? module.exports.getAuthLogItem() : module.exports.getSessionLogItem(); 
+    var prefix = 'logEvents';
+    redis.client.hmset( prefix + ':' + logItem.id, 'data', JSON.stringify(logItem));
+    redis.client.lpush('logEvents', prefix + ':' + logItem.id);
     iter++;
   }
 };
