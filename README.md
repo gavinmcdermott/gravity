@@ -28,6 +28,7 @@ To run the app:
 ```sh
 $ npm start
 ```
+Then navigate to [this address](http://localhost:3000/#/audit) (http://localhost:3000/#/audit)
 
 
 ### Etc.
