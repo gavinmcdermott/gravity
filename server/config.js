@@ -2,6 +2,7 @@
 var config = {};
 
 // Environment configuration values
+// TODO: set up test instance and prod 
 var ENV = {
   REDIS_URL: 'redis://localhost:6379',
   PORT: 3000

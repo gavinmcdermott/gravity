@@ -163,128 +163,10 @@ input[type="color"]:focus,
     outline: none
 }
 
-textarea.invalid,
-input[type="text"].invalid,
-input[type="password"].invalid,
-input[type="file"].invalid,
-input[type="datetime"].invalid,
-input[type="datetime-local"].invalid,
-input[type="date"].invalid,
-input[type="month"].invalid,
-input[type="time"].invalid,
-input[type="week"].invalid,
-input[type="number"].invalid,
-input[type="email"].invalid,
-input[type="url"].invalid,
-input[type="search"].invalid,
-input[type="tel"].invalid,
-input[type="color"].invalid,
-.uneditable-input.invalid,
-.faux-file.invalid {
-  border: 1px solid #e85c41
-}
-
 input[type="radio"],
 input[type="checkbox"] {
   cursor: pointer
 }
-
-input:not([type="submit"])[disabled],
-select[disabled],
-textarea[disabled],
-input[readonly],
-select[readonly],
-textarea[readonly] {
-  cursor: not-allowed;
-  background-color: #e0e0e0;
-}
-
-.invalid-error {
-  display: block;
-  color: #db3a1b;
-  white-space: normal;
-  word-wrap: break-word;
-  width: 100%;
-  max-width: 625px;
-  font-size: 14px;
-  line-height: 24px;
-  font-weight: 400;
-  position: relative;
-  margin-top: -19px;
-  margin-bottom:30px;
-}
-
-
-
-/*****************************************/
-/* NATIVE SELECTS */
-/*****************************************/
-.select-wrap {
-  position: relative;
-  display: inline-block;
-  /*padding: 0 9px 0 10px;*/
-  /*margin-bottom: 30px;*/
-  vertical-align: middle;
-  border-radius: 2px;
-  min-width: 50px;
-  max-width: 625px; 
-  width: 100%;
-  min-height: 36px;
-  background-color: #E9E9E9;
-  /*border: 1px solid #E0E0E0;*/
-  margin: 0 0 0px 0;
-  font-weight: 400;
-  cursor: pointer;
-  color: #5B5E61;
-}
-
-.select-wrap .icon {
-  position: absolute;
-  line-height: 36px;
-  font-size: 11px;
-  right: 8px;
-}
-
-.select-wrap select {
-  width: 100%;
-  line-height: 36px;
-  padding-left: 10px;
-  position: absolute;
-  border: none;
-  box-shadow: none;
-  background: transparent;
-  background-image: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  z-index: 2;
-  /*font-weight: 300;*/
-  color: #5B5E61;
-}
-
-.select-wrap select:focus {
-  height: 36px;
-  line-height: 32px;
-  padding-left: 8px;
-  border: 1px solid #0F3C68;
-  outline: none
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*****************************************/
@@ -375,15 +257,6 @@ input[type="checkbox"]:checked + span + .checkbox-content--reveal {
   display: block;
   opacity: 1;
 }
-
-
-
-
-
-
-
-
-
 
 
 .button {

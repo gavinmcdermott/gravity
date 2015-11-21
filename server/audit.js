@@ -42,7 +42,6 @@ module.exports.getEvents = function(req, res) {
     // Execute the fetches
     multi.exec(function(err) {
       if (err) {
-
         res.json({ error: err });
       }
       res.json({ data: allResults });
@@ -73,7 +72,6 @@ module.exports.updateAuditEvents = function(req, res) {
       }
       newLogItem.audit.suspicious = logItem.suspicious;
       newLogItem.audit.comment = logItem.comment;
-      
       redisClient.hmset(FETCH_PREFIX + ":" + newLogItem.id, "data", JSON.stringify(newLogItem), function(err, data) {
         updateCounter++;
       });

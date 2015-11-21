@@ -43,18 +43,3 @@ app.listen(PORT, function () {
 });
 
 module.exports.app = app;
-
-
-
-
-
-
-
-
-
-// wipe data setup during tests
-process.on('exit', function() {
-  console.log('Node exiting...');
-  redisClient.flushdb();
-  redisClient.flushall();
-});

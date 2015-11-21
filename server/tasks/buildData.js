@@ -1,3 +1,4 @@
+// The sole purpose of this file is just to build test data for the app
 var redis    = require('../redis');
 var uuid     = require('node-uuid');
 
@@ -52,6 +53,7 @@ module.exports.getAuthLogItem = function() {
   }
 }
 
+// TODO: fake live events
 module.exports.build = function() {
   var iter = 0;
   while (iter < 30) {
